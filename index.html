@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0a07">
+<meta name="description" content="Sacred Mantra Counter - Track your Ram Ram, Kaali Kaali, Om Namah Shivay, Radha Radha, and Jai Hanuman jap">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Naam Jap">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>✦ Naam Jap ✦ Sacred Mantra Counter</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
@@ -914,8 +922,34 @@ const state = {
   historyOpen: true,
 };
 
+// ── LocalStorage Persistence ─────────────────────────────────────────
+function saveState() {
+  try {
+    localStorage.setItem('naamjap_counts', JSON.stringify(state.counts));
+    localStorage.setItem('naamjap_activeIdx', state.activeIdx);
+  } catch (e) {
+    console.log('localStorage save failed:', e);
+  }
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('naamjap_counts');
+    const savedIdx = localStorage.getItem('naamjap_activeIdx');
+    if (saved) {
+      state.counts = JSON.parse(saved);
+    }
+    if (savedIdx !== null) {
+      state.activeIdx = parseInt(savedIdx, 10);
+    }
+  } catch (e) {
+    console.log('localStorage load failed:', e);
+  }
+}
+
 // ── Build UI ─────────────────────────────────────────────────────────
 function init() {
+  loadState();
   buildTabs();
   buildMalaDots();
   buildBreakdown();
@@ -982,6 +1016,7 @@ function selectMantra(idx) {
   document.querySelectorAll('.mantra-tab').forEach((t, i) =>
     t.classList.toggle('active', i === idx)
   );
+  saveState();
   render();
 }
 
@@ -1046,6 +1081,7 @@ function increment() {
   if (state.counts[m.id] % MALA_SIZE === 0)
     celebrateMala(state.counts[m.id] / MALA_SIZE, m.tab);
 
+  saveState();
   render();
 }
 
@@ -1101,6 +1137,7 @@ function updateJapPerMin() {
 function resetCurrent() {
   const m = MANTRAS[state.activeIdx];
   state.counts[m.id] = 0;
+  saveState();
   render();
   showToast('↺ ' + m.tab + ' reset');
 }
@@ -1109,6 +1146,7 @@ function resetAll() {
   if (!confirm('Reset all counts?')) return;
   MANTRAS.forEach(m => { state.counts[m.id] = 0; });
   stopTimer();
+  saveState();
   render();
   showToast('✕ All counts reset');
 }
@@ -1156,6 +1194,7 @@ function addSingleExternal(id) {
   const prevMalas = Math.floor(prevCount / MALA_SIZE);
   const newMalas  = Math.floor(state.counts[id] / MALA_SIZE);
   if (newMalas > prevMalas) celebrateMala(newMalas, m.tab);
+  saveState();
   render();
   updateExtCurrents();
   showToast('✦ Added ' + val + ' ' + m.tab + ' to your count');
@@ -1178,6 +1217,7 @@ function addAllExternal() {
   });
   if (totalAdded === 0) return;
   if (lastMala) celebrateMala(lastMala.num, lastMala.name);
+  saveState();
   render();
   updateExtCurrents();
   showToast('✦ Added ' + totalAdded + ' jap to your totals');
@@ -1210,6 +1250,15 @@ function handleKey(e) {
 }
 
 init();
+
+// ── PWA Service Worker Registration ──────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => console.log('Service Worker registered'))
+      .catch(err => console.log('Service Worker registration failed'));
+  });
+}
 </script>
 </body>
 </html>

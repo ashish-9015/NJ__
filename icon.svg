@@ -1,0 +1,26 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#0a0a07"/>
+  
+  <!-- Mandala circles -->
+  <circle cx="256" cy="256" r="220" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.3"/>
+  <circle cx="256" cy="256" r="180" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <circle cx="256" cy="256" r="140" fill="none" stroke="#c9a84c" stroke-width="2" opacity="0.5"/>
+  <circle cx="256" cy="256" r="100" fill="none" stroke="#e8c97a" stroke-width="2" opacity="0.6"/>
+  
+  <!-- Radial lines -->
+  <g stroke="#c9a84c" stroke-width="1" opacity="0.25">
+    <line x1="256" y1="36" x2="256" y2="476"/>
+    <line x1="36" y1="256" x2="476" y2="256"/>
+    <line x1="100" y1="100" x2="412" y2="412"/>
+    <line x1="412" y1="100" x2="100" y2="412"/>
+  </g>
+  
+  <!-- Om symbol -->
+  <text x="256" y="280" font-size="140" fill="#e8c97a" text-anchor="middle" font-family="serif" opacity="0.9">ॐ</text>
+  
+  <!-- Star accents -->
+  <text x="160" y="140" font-size="40" fill="#c9a84c" text-anchor="middle" opacity="0.7">✦</text>
+  <text x="352" y="140" font-size="40" fill="#c9a84c" text-anchor="middle" opacity="0.7">✦</text>
+  <text x="160" y="395" font-size="40" fill="#c9a84c" text-anchor="middle" opacity="0.7">✦</text>
+  <text x="352" y="395" font-size="40" fill="#c9a84c" text-anchor="middle" opacity="0.7">✦</text>
+</svg>

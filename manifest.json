@@ -1,0 +1,32 @@
+{
+  "name": "Naam Jap - Sacred Mantra Counter",
+  "short_name": "Naam Jap",
+  "description": "Track your spiritual practice with Ram Ram, Kaali Kaali, Om Namah Shivay, Radha Radha, and Jai Hanuman mantras",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a07",
+  "theme_color": "#0a0a07",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "productivity", "spirituality"],
+  "screenshots": [
+    {
+      "src": "screenshot.png",
+      "sizes": "540x720",
+      "type": "image/png"
+    }
+  ]
+}
