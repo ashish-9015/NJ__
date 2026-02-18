@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ Naam Jap ✦ Sacred Mantra Counter</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: #9a7a30;
+    --bg-deep: #0a0a07;
+    --bg-card: #161410;
+    --text-muted: #7a6540;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201,168,76,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 20%, rgba(201,168,76,0.03) 0%, transparent 60%),
+      radial-gradient(ellipse 30% 30% at 80% 80%, rgba(201,168,76,0.03) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .mandala-bg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 700px;
+    opacity: 0.04;
+    animation: mandala-spin 120s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes mandala-spin {
+    from { transform: translate(-50%,-50%) rotate(0deg); }
+    to   { transform: translate(-50%,-50%) rotate(360deg); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  /* ── Header ─────────────────────────────────── */
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .header h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    letter-spacing: 0.25em;
+    color: var(--gold-light);
+    text-shadow: 0 0 40px rgba(201,168,76,0.4), 0 2px 8px rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .header h1 .star {
+    font-size: 0.7em;
+    color: var(--gold);
+    animation: star-pulse 3s ease-in-out infinite;
+  }
+  @keyframes star-pulse {
+    0%,100% { opacity: 0.6; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.2); }
+  }
+  .header p {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--gold-dim);
+    letter-spacing: 0.12em;
+    margin-top: 6px;
+  }
+
+  /* ── Tabs ───────────────────────────────────── */
+  .mantra-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  .mantra-tab {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--text-muted);
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .mantra-tab:hover {
+    border-color: var(--gold-dim);
+    color: var(--gold);
+    background: rgba(201,168,76,0.05);
+  }
+  .mantra-tab.active {
+    border-color: var(--gold);
+    color: var(--gold-light);
+    background: rgba(201,168,76,0.1);
+    box-shadow: 0 0 12px rgba(201,168,76,0.15), inset 0 0 8px rgba(201,168,76,0.05);
+  }
+
+  /* ── Timer bar ──────────────────────────────── */
+  .timer-bar {
+    background: var(--bg-card);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .timer-display {
+    font-size: clamp(1.3rem, 4vw, 1.7rem);
+    letter-spacing: 0.1em;
+    color: var(--gold-light);
+    font-variant-numeric: tabular-nums;
+    min-width: 80px;
+  }
+  .divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(201,168,76,0.2);
+    display: none;
+  }
+  .timer-controls { display: flex; gap: 8px; }
+  .btn-round {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.4);
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-round:hover { background: rgba(201,168,76,0.15); border-color: var(--gold); }
+  .btn-round:active { transform: scale(0.95); }
+  
+  .stats-group { 
+    margin-left: auto; 
+    display: flex; 
+    gap: 20px;
+    width: 100%;
+    justify-content: space-around;
+  }
+  .stat-item { text-align: center; }
+  .stat-value { font-size: clamp(1.1rem, 3vw, 1.3rem); color: var(--gold-light); display: block; }
+  .stat-label { font-size: 0.6rem; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; }
+  
+  @media (min-width: 600px) {
+    .timer-bar { padding: 14px 24px; gap: 20px; }
+    .divider { display: block; }
+    .stats-group { 
+      margin-left: auto; 
+      width: auto;
+      gap: 28px;
+      justify-content: flex-start;
+    }
+  }
+
+  /* ── Mantra display ─────────────────────────── */
+  .mantra-display { text-align: center; padding: 28px 20px 20px; }
+  .mantra-script {
+    font-size: clamp(2.2rem, 8vw, 4.5rem);
+    line-height: 1.25;
+    color: var(--gold-light);
+    animation: mantra-glow 4s ease-in-out infinite;
+    font-family: 'EB Garamond', serif;
+  }
+  @keyframes mantra-glow {
+    0%,100% { text-shadow: 0 0 40px rgba(201,168,76,0.4), 0 0 80px rgba(201,168,76,0.15); }
+    50%      { text-shadow: 0 0 60px rgba(201,168,76,0.7), 0 0 120px rgba(201,168,76,0.3); }
+  }
+  .mantra-meaning {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--gold-dim);
+    margin-top: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Counter circle ─────────────────────────── */
+  .counter-wrap { display: flex; justify-content: center; padding: 20px 0 16px; }
+  .counter-circle {
+    position: relative;
+    width: min(240px, 70vw);
+    height: min(240px, 70vw);
+    max-width: 280px;
+    max-height: 280px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .counter-circle svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .counter-bg { fill: var(--bg-card); stroke: rgba(201,168,76,0.15); stroke-width: 1; }
+  .counter-ring { fill: none; stroke: rgba(201,168,76,0.1); stroke-width: 1.5; }
+  .counter-progress {
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.3s ease;
+    transform-origin: center;
+    transform: rotate(-90deg);
+  }
+  .counter-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .count-number {
+    font-size: clamp(2.8rem, 11vw, 3.8rem);
+    color: var(--gold-light);
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(201,168,76,0.5);
+    font-variant-numeric: tabular-nums;
+  }
+  .count-number.pulse { animation: count-pulse 0.15s ease-out; }
+  @keyframes count-pulse {
+    0%   { transform: scale(1.2); color: #fff; }
+    100% { transform: scale(1);   color: var(--gold-light); }
+  }
+  .count-label { 
+    font-size: clamp(0.6rem, 1.8vw, 0.65rem); 
+    letter-spacing: 0.2em; 
+    color: var(--text-muted); 
+    margin-top: 4px; 
+    text-transform: uppercase; 
+  }
+  .click-hint { 
+    font-family: 'EB Garamond', serif; 
+    font-style: italic; 
+    font-size: clamp(0.68rem, 2vw, 0.75rem); 
+    color: rgba(201,168,76,0.3); 
+    margin-top: 6px; 
+  }
+
+  .counter-circle.tap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    animation: tap-ripple 0.4s ease-out forwards;
+    pointer-events: none;
+  }
+  @keyframes tap-ripple {
+    0%   { transform: scale(1);    opacity: 0.8; }
+    100% { transform: scale(1.15); opacity: 0; }
+  }
+
+  /* ── Mala flash ─────────────────────────────── */
+  .mala-flash {
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(201,168,76,0.12) 0%, transparent 70%);
+    pointer-events: none; z-index: 100; opacity: 0;
+  }
+  .mala-flash.show { animation: mala-celebrate 1s ease-out forwards; }
+  @keyframes mala-celebrate {
+    0%  { opacity: 0; }
+    15% { opacity: 1; }
+    100%{ opacity: 0; }
+  }
+
+  /* ── Mala bead dots ─────────────────────────── */
+  .mala-dots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin: 4px 40px 16px;
+    min-height: 16px;
+  }
+  .mala-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.18);
+    border: 1px solid rgba(201,168,76,0.25);
+    transition: all 0.2s ease;
+  }
+  .mala-dot.complete { background: var(--gold); box-shadow: 0 0 5px rgba(201,168,76,0.6); }
+
+  /* ── Action buttons ─────────────────────────── */
+  .action-row { display: flex; justify-content: center; gap: 12px; margin-bottom: 28px; }
+  .btn-action {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+  .btn-action:hover { border-color: var(--gold); color: var(--gold-light); background: rgba(201,168,76,0.08); }
+
+  /* ── History ─────────────────────────────────── */
+  .history-section { border-top: 1px solid rgba(201,168,76,0.1); padding-top: 20px; }
+  .history-toggle {
+    background: none; border: none;
+    color: var(--gold-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    margin: 0 auto 16px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .history-toggle:hover { color: var(--gold); }
+
+  .history-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .history-item { background: var(--bg-card); padding: 20px; text-align: center; }
+  .history-label { font-size: 0.6rem; letter-spacing: 0.18em; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
+
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .breakdown-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 3px;
+    padding: 14px 12px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .breakdown-card:hover { border-color: rgba(201,168,76,0.3); }
+  .breakdown-name { font-size: 0.58rem; letter-spacing: 0.13em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+  .breakdown-count { font-size: 1.4rem; color: var(--gold); }
+  .breakdown-malas { font-size: 0.58rem; color: var(--text-muted); margin-top: 3px; }
+
+  /* ── Toast ───────────────────────────────────── */
+  .toast {
+    position: fixed;
+    top: 24px; left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: var(--bg-card);
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    padding: 12px 28px;
+    border-radius: 3px;
+    box-shadow: 0 0 40px rgba(201,168,76,0.3);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 200;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── Add External Jap ───────────────────────── */
+  .add-external-section {
+    margin: 0 0 28px;
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .add-external-header {
+    background: var(--bg-card);
+    border: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 20px;
+    cursor: pointer;
+    color: var(--gold-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s, background 0.2s;
+  }
+  .add-external-header:hover { color: var(--gold); background: rgba(201,168,76,0.04); }
+  .add-external-header .ext-icon { font-size: 1rem; }
+  .add-external-header .ext-arrow { font-size: 0.75rem; transition: transform 0.25s; }
+  .add-external-header.open .ext-arrow { transform: rotate(180deg); }
+
+  .add-external-body {
+    display: none;
+    background: rgba(10,10,7,0.6);
+    padding: 20px;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .add-external-body.open { display: block; }
+
+  .ext-label {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--gold-dim);
+    margin-bottom: 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .ext-mantra-rows { display: flex; flex-direction: column; gap: 10px; }
+
+  .ext-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ext-row-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    min-width: 130px;
+    flex-shrink: 0;
+  }
+
+  .ext-input {
+    background: var(--bg-deep);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 2px;
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    width: 110px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .ext-input:focus { border-color: var(--gold); }
+  .ext-input::placeholder { color: rgba(201,168,76,0.2); }
+
+  .ext-add-btn {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.35);
+    border-radius: 2px;
+    color: var(--gold-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    padding: 8px 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .ext-add-btn:hover { border-color: var(--gold); color: var(--gold-light); background: rgba(201,168,76,0.08); }
+
+  .ext-current {
+    font-size: 0.7rem;
+    color: rgba(201,168,76,0.35);
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    margin-left: 4px;
+    min-width: 70px;
+  }
+
+  .ext-add-all-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(201,168,76,0.08);
+    gap: 10px;
+    align-items: center;
+  }
+
+  .ext-clear-btn {
+    background: transparent;
+    border: none;
+    color: rgba(201,168,76,0.3);
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    padding: 4px 8px;
+  }
+  .ext-clear-btn:hover { color: var(--gold-dim); }
+
+  .ext-add-all-btn {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    padding: 10px 24px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.25s;
+  }
+  .ext-add-all-btn:hover { background: rgba(201,168,76,0.2); box-shadow: 0 0 16px rgba(201,168,76,0.2); }
+
+  .shortcut-hint {
+    text-align: center;
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 0.78rem;
+    color: rgba(201,168,76,0.25);
+    margin-top: 24px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Mobile Responsive ───────────────────────── */
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 16px 40px;
+    }
+
+    .header {
+      padding: 24px 0 20px;
+    }
+
+    .mantra-selector {
+      gap: 6px;
+      padding: 16px 0;
+    }
+
+    .mantra-tab {
+      font-size: 0.62rem;
+      padding: 7px 12px;
+    }
+
+    .timer-bar {
+      padding: 12px 16px;
+      gap: 12px;
+    }
+
+    .stats-group {
+      margin-left: 0;
+      width: 100%;
+      justify-content: space-around;
+      padding-top: 8px;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+
+    .mala-dots {
+      margin: 4px 20px 14px;
+      gap: 4px;
+    }
+
+    .mala-dot {
+      width: 6px;
+      height: 6px;
+    }
+
+    .action-row {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-action {
+      font-size: 0.65rem;
+      padding: 9px 18px;
+    }
+
+    /* External jap mobile */
+    .add-external-header {
+      padding: 12px 16px;
+      font-size: 0.62rem;
+    }
+
+    .add-external-body {
+      padding: 16px;
+    }
+
+    .ext-row {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ext-row-label {
+      min-width: 100%;
+      margin-bottom: 4px;
+    }
+
+    .ext-input {
+      flex: 1;
+      min-width: 90px;
+    }
+
+    .ext-add-btn {
+      font-size: 0.58rem;
+      padding: 8px 12px;
+    }
+
+    .ext-current {
+      flex: 1;
+      text-align: right;
+      font-size: 0.65rem;
+    }
+
+    .ext-add-all-row {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ext-add-all-btn {
+      width: 100%;
+      padding: 12px 24px;
+    }
+
+    .ext-clear-btn {
+      text-align: center;
+    }
+
+    /* History mobile */
+    .history-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .breakdown-grid {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 6px;
+    }
+
+    .breakdown-card {
+      padding: 12px 10px;
+    }
+
+    .shortcut-hint {
+      font-size: 0.72rem;
+      padding: 0 12px;
+    }
+
+    .toast {
+      font-size: 0.7rem;
+      padding: 10px 20px;
+      max-width: 90vw;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .header h1 {
+      font-size: 1.4rem;
+      letter-spacing: 0.2em;
+      gap: 12px;
+    }
+
+    .header p {
+      font-size: 0.88rem;
+    }
+
+    .mantra-script {
+      font-size: clamp(2rem, 10vw, 3rem);
+    }
+
+    .mantra-meaning {
+      font-size: 0.92rem;
+    }
+
+    .mandala-bg {
+      width: 500px;
+      height: 500px;
+    }
+
+    .ext-mantra-rows {
+      gap: 12px;
+    }
+  }
+
+  /* Touch devices - increase tap targets */
+  @media (hover: none) and (pointer: coarse) {
+    .btn-round {
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .mantra-tab {
+      min-height: 44px;
+      padding: 10px 16px;
+    }
+
+    .btn-action {
+      min-height: 44px;
+    }
+
+    .counter-circle {
+      min-width: 200px;
+      min-height: 200px;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+<svg class="mandala-bg" viewBox="0 0 400 400" fill="none">
+  <circle cx="200" cy="200" r="190" stroke="gold" stroke-width="0.5"/>
+  <circle cx="200" cy="200" r="160" stroke="gold" stroke-width="0.5"/>
+  <circle cx="200" cy="200" r="130" stroke="gold" stroke-width="0.5"/>
+  <circle cx="200" cy="200" r="100" stroke="gold" stroke-width="0.5"/>
+  <circle cx="200" cy="200" r="70"  stroke="gold" stroke-width="0.5"/>
+  <circle cx="200" cy="200" r="40"  stroke="gold" stroke-width="0.5"/>
+  <g stroke="gold" stroke-width="0.4">
+    <line x1="200" y1="10" x2="200" y2="390"/>
+    <line x1="10"  y1="200" x2="390" y2="200"/>
+    <line x1="56"  y1="56"  x2="344" y2="344"/>
+    <line x1="344" y1="56"  x2="56"  y2="344"/>
+    <line x1="200" y1="10" x2="200" y2="390" transform="rotate(22.5  200 200)"/>
+    <line x1="200" y1="10" x2="200" y2="390" transform="rotate(45    200 200)"/>
+    <line x1="200" y1="10" x2="200" y2="390" transform="rotate(67.5  200 200)"/>
+    <line x1="200" y1="10" x2="200" y2="390" transform="rotate(112.5 200 200)"/>
+    <line x1="200" y1="10" x2="200" y2="390" transform="rotate(135   200 200)"/>
+    <line x1="200" y1="10" x2="200" y2="390" transform="rotate(157.5 200 200)"/>
+  </g>
+  <text x="200" y="215" text-anchor="middle" font-size="60" fill="gold" font-family="serif">ॐ</text>
+</svg>
+
+<div class="mala-flash" id="malaFlash"></div>
+<div class="toast" id="toast"></div>
+
+<div class="container">
+
+  <header class="header">
+    <h1><span class="star">✦</span> Naam Jap <span class="star">✦</span></h1>
+    <p>Sacred Mantra Counter</p>
+  </header>
+
+  <div class="mantra-selector" id="mantraSelector"></div>
+
+  <div class="timer-bar">
+    <div class="timer-display" id="timerDisplay">00:00</div>
+    <div class="divider"></div>
+    <div class="timer-controls">
+      <button class="btn-round" id="btnPlay" onclick="toggleTimer()">▶</button>
+      <button class="btn-round" onclick="stopTimer()">■</button>
+    </div>
+    <div class="stats-group">
+      <div class="stat-item">
+        <span class="stat-value" id="sessionCount">0</span>
+        <span class="stat-label">This Session</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="japPerMin">—</span>
+        <span class="stat-label">Jap / Min</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mantra-display">
+    <div class="mantra-script" id="mantraScript"></div>
+    <div class="mantra-meaning" id="mantraMeaning"></div>
+  </div>
+
+  <div class="counter-wrap">
+    <div class="counter-circle" id="counterCircle" onclick="increment()">
+      <svg viewBox="0 0 240 240">
+        <circle class="counter-bg" cx="120" cy="120" r="115"/>
+        <circle class="counter-ring" cx="120" cy="120" r="105"/>
+        <circle class="counter-ring" cx="120" cy="120" r="97"/>
+        <circle class="counter-progress" id="progressRing"
+          cx="120" cy="120" r="105"
+          stroke-dasharray="659.7" stroke-dashoffset="659.7"/>
+      </svg>
+      <div class="counter-inner">
+        <div class="count-number" id="countNumber">0</div>
+        <div class="count-label">JAP</div>
+        <div class="click-hint">tap or press space</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mala-dots" id="malaDots"></div>
+
+  <div class="action-row">
+    <button class="btn-action" onclick="resetCurrent()">↺ Reset</button>
+    <button class="btn-action" onclick="resetAll()">✕ Reset All</button>
+  </div>
+
+  <!-- Add External Jap -->
+  <div class="add-external-section">
+    <button class="add-external-header" id="extHeader" onclick="toggleExternal()">
+      <span>✦ &nbsp;Add Jap Done Elsewhere</span>
+      <span class="ext-arrow" id="extArrow">▾</span>
+    </button>
+    <div class="add-external-body" id="extBody">
+      <div class="ext-label">Enter counts you've already done on another app or website — they'll be added to your totals here.</div>
+      <div class="ext-mantra-rows" id="extRows"></div>
+      <div class="ext-add-all-row">
+        <button class="ext-clear-btn" onclick="clearExtInputs()">Clear fields</button>
+        <button class="ext-add-all-btn" onclick="addAllExternal()">✦ Add to Counts</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="history-section">
+    <button class="history-toggle" onclick="toggleHistory()">
+      <span id="historyArrow">▾</span> Session History
+    </button>
+    <div id="historyContent">
+      <div class="history-grid">
+        <div class="history-item">
+          <span class="stat-value" id="totalJap" style="font-size:2rem">0</span>
+          <div class="history-label">Total Naam Jap</div>
+        </div>
+        <div class="history-item">
+          <span class="stat-value" id="totalMalas" style="font-size:2rem">0</span>
+          <div class="history-label">Malas Completed</div>
+        </div>
+      </div>
+      <div class="breakdown-grid" id="breakdownGrid"></div>
+    </div>
+  </div>
+
+  <div class="shortcut-hint">Space bar = count &nbsp;•&nbsp; Tab = next mantra</div>
+</div>
+
+<script>
+// ── Mantra data ──────────────────────────────────────────────────────
+const MANTRAS = [
+  {
+    id: 'ram_ram',
+    tab: 'Ram Ram',
+    script: 'राम राम',
+    meaning: 'Ram Ram — the eternal name, the divine lord present in all',
+  },
+  {
+    id: 'kaali_kaali',
+    tab: 'Kaali Kaali',
+    script: 'काली काली',
+    meaning: 'Kaali Kaali — the sacred mother of liberation and transformation',
+  },
+  {
+    id: 'om_namah_shivay',
+    tab: 'Om Namah Shivay',
+    script: 'ॐ नमः शिवाय',
+    meaning: 'Om Namah Shivay — I bow to Shiva, the divine self within',
+  },
+  {
+    id: 'radha_radha',
+    tab: 'Radha Radha',
+    script: 'राधे राधे',
+    meaning: 'Radhe Radhe — pure love and devotion, the bliss divine',
+  },
+  {
+    id: 'jai_hanuman',
+    tab: 'Jai Hanuman',
+    script: 'जय हनुमान',
+    meaning: 'Jai Hanuman — victory to the embodiment of devotion and strength',
+  },
+];
+
+const MALA_SIZE = 108;
+
+const state = {
+  activeIdx: 0,
+  counts: Object.fromEntries(MANTRAS.map(m => [m.id, 0])),
+  timerSec: 0,
+  timerRunning: false,
+  timerInterval: null,
+  historyOpen: true,
+};
+
+// ── Build UI ─────────────────────────────────────────────────────────
+function init() {
+  buildTabs();
+  buildMalaDots();
+  buildBreakdown();
+  buildExtRows();
+  render();
+  document.addEventListener('keydown', handleKey);
+}
+
+function buildExtRows() {
+  const container = document.getElementById('extRows');
+  container.innerHTML = '';
+  MANTRAS.forEach(m => {
+    const row = document.createElement('div');
+    row.className = 'ext-row';
+    row.innerHTML = `
+      <div class="ext-row-label">${m.tab}</div>
+      <input class="ext-input" id="ext-${m.id}" type="number" min="0" placeholder="0" />
+      <button class="ext-add-btn" onclick="addSingleExternal('${m.id}')">+ Add</button>
+      <span class="ext-current" id="ext-cur-${m.id}">total: 0</span>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function buildTabs() {
+  const sel = document.getElementById('mantraSelector');
+  MANTRAS.forEach((m, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'mantra-tab' + (i === 0 ? ' active' : '');
+    btn.textContent = m.tab;
+    btn.onclick = () => selectMantra(i);
+    sel.appendChild(btn);
+  });
+}
+
+function buildMalaDots() {
+  const wrap = document.getElementById('malaDots');
+  wrap.innerHTML = '';
+  for (let i = 0; i < MALA_SIZE; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'mala-dot';
+    wrap.appendChild(dot);
+  }
+}
+
+function buildBreakdown() {
+  const grid = document.getElementById('breakdownGrid');
+  grid.innerHTML = '';
+  MANTRAS.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'breakdown-card';
+    card.innerHTML = `
+      <div class="breakdown-name">${m.tab}</div>
+      <div class="breakdown-count" id="bdcount-${m.id}">0</div>
+      <div class="breakdown-malas" id="bdmalas-${m.id}">0 malas</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ── Select mantra ────────────────────────────────────────────────────
+function selectMantra(idx) {
+  state.activeIdx = idx;
+  document.querySelectorAll('.mantra-tab').forEach((t, i) =>
+    t.classList.toggle('active', i === idx)
+  );
+  render();
+}
+
+// ── Render ───────────────────────────────────────────────────────────
+function render() {
+  const m = MANTRAS[state.activeIdx];
+  const count = state.counts[m.id];
+
+  document.getElementById('mantraScript').textContent = m.script;
+  document.getElementById('mantraMeaning').textContent = m.meaning;
+  document.getElementById('countNumber').textContent = count;
+
+  // Progress ring
+  const circumference = 2 * Math.PI * 105;
+  const progress = (count % MALA_SIZE) / MALA_SIZE;
+  document.getElementById('progressRing').style.strokeDashoffset =
+    circumference - progress * circumference;
+
+  // Bead dots
+  const pos = count % MALA_SIZE;
+  document.querySelectorAll('.mala-dot').forEach((dot, i) =>
+    dot.classList.toggle('complete', i < pos)
+  );
+
+  // Totals
+  const totalAll = Object.values(state.counts).reduce((a, b) => a + b, 0);
+  document.getElementById('totalJap').textContent = totalAll;
+  document.getElementById('totalMalas').textContent = Math.floor(totalAll / MALA_SIZE);
+  document.getElementById('sessionCount').textContent = totalAll;
+
+  // Breakdown
+  MANTRAS.forEach(mn => {
+    const c = state.counts[mn.id];
+    const malas = Math.floor(c / MALA_SIZE);
+    const ce = document.getElementById('bdcount-' + mn.id);
+    const me = document.getElementById('bdmalas-' + mn.id);
+    if (ce) ce.textContent = c;
+    if (me) me.textContent = malas + ' mala' + (malas !== 1 ? 's' : '');
+  });
+
+  // Ext totals
+  updateExtCurrents();
+}
+
+// ── Increment ────────────────────────────────────────────────────────
+function increment() {
+  const m = MANTRAS[state.activeIdx];
+  state.counts[m.id]++;
+
+  if (!state.timerRunning) startTimer();
+
+  const num = document.getElementById('countNumber');
+  num.classList.remove('pulse');
+  void num.offsetWidth;
+  num.classList.add('pulse');
+
+  const circle = document.getElementById('counterCircle');
+  circle.classList.remove('tap');
+  void circle.offsetWidth;
+  circle.classList.add('tap');
+
+  if (state.counts[m.id] % MALA_SIZE === 0)
+    celebrateMala(state.counts[m.id] / MALA_SIZE, m.tab);
+
+  render();
+}
+
+function celebrateMala(num, name) {
+  const flash = document.getElementById('malaFlash');
+  flash.classList.remove('show');
+  void flash.offsetWidth;
+  flash.classList.add('show');
+  showToast('✦ Mala ' + num + ' complete — ' + name + ' ✦');
+}
+
+// ── Timer ────────────────────────────────────────────────────────────
+function toggleTimer() { state.timerRunning ? pauseTimer() : startTimer(); }
+
+function startTimer() {
+  if (state.timerRunning) return;
+  state.timerRunning = true;
+  state.timerInterval = setInterval(() => {
+    state.timerSec++;
+    updateTimerDisplay();
+    updateJapPerMin();
+  }, 1000);
+  document.getElementById('btnPlay').textContent = '⏸';
+}
+
+function pauseTimer() {
+  state.timerRunning = false;
+  clearInterval(state.timerInterval);
+  document.getElementById('btnPlay').textContent = '▶';
+}
+
+function stopTimer() {
+  pauseTimer();
+  state.timerSec = 0;
+  updateTimerDisplay();
+  document.getElementById('japPerMin').textContent = '—';
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(state.timerSec / 60).toString().padStart(2, '0');
+  const s = (state.timerSec % 60).toString().padStart(2, '0');
+  document.getElementById('timerDisplay').textContent = m + ':' + s;
+}
+
+function updateJapPerMin() {
+  if (state.timerSec < 5) return;
+  const total = Object.values(state.counts).reduce((a, b) => a + b, 0);
+  document.getElementById('japPerMin').textContent =
+    ((total / state.timerSec) * 60).toFixed(1);
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────
+function resetCurrent() {
+  const m = MANTRAS[state.activeIdx];
+  state.counts[m.id] = 0;
+  render();
+  showToast('↺ ' + m.tab + ' reset');
+}
+
+function resetAll() {
+  if (!confirm('Reset all counts?')) return;
+  MANTRAS.forEach(m => { state.counts[m.id] = 0; });
+  stopTimer();
+  render();
+  showToast('✕ All counts reset');
+}
+
+// ── History toggle ─────────────────────────────────────────────────────
+function toggleHistory() {
+  state.historyOpen = !state.historyOpen;
+  document.getElementById('historyContent').style.display = state.historyOpen ? '' : 'none';
+  document.getElementById('historyArrow').textContent = state.historyOpen ? '▾' : '▸';
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────
+let toastTimeout;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── External Jap ───────────────────────────────────────────────────────
+function toggleExternal() {
+  const body = document.getElementById('extBody');
+  const arrow = document.getElementById('extArrow');
+  const header = document.getElementById('extHeader');
+  const isOpen = body.classList.toggle('open');
+  header.classList.toggle('open', isOpen);
+  arrow.textContent = isOpen ? '▲' : '▾';
+}
+
+function addSingleExternal(id) {
+  const input = document.getElementById('ext-' + id);
+  const val = parseInt(input.value, 10);
+  if (!val || val <= 0 || isNaN(val)) {
+    input.style.borderColor = 'rgba(200,80,80,0.6)';
+    setTimeout(() => input.style.borderColor = '', 900);
+    return;
+  }
+  const prevCount = state.counts[id];
+  state.counts[id] += val;
+  input.value = '';
+  // Check for mala completions in the added range
+  const m = MANTRAS.find(mn => mn.id === id);
+  const prevMalas = Math.floor(prevCount / MALA_SIZE);
+  const newMalas  = Math.floor(state.counts[id] / MALA_SIZE);
+  if (newMalas > prevMalas) celebrateMala(newMalas, m.tab);
+  render();
+  updateExtCurrents();
+  showToast('✦ Added ' + val + ' ' + m.tab + ' to your count');
+}
+
+function addAllExternal() {
+  let totalAdded = 0;
+  let lastMala = null;
+  MANTRAS.forEach(m => {
+    const input = document.getElementById('ext-' + m.id);
+    const val = parseInt(input.value, 10);
+    if (val > 0 && !isNaN(val)) {
+      const prevMalas = Math.floor(state.counts[m.id] / MALA_SIZE);
+      state.counts[m.id] += val;
+      totalAdded += val;
+      const newMalas = Math.floor(state.counts[m.id] / MALA_SIZE);
+      if (newMalas > prevMalas) lastMala = { num: newMalas, name: m.tab };
+      input.value = '';
+    }
+  });
+  if (totalAdded === 0) return;
+  if (lastMala) celebrateMala(lastMala.num, lastMala.name);
+  render();
+  updateExtCurrents();
+  showToast('✦ Added ' + totalAdded + ' jap to your totals');
+}
+
+function clearExtInputs() {
+  MANTRAS.forEach(m => {
+    const input = document.getElementById('ext-' + m.id);
+    if (input) input.value = '';
+  });
+}
+
+function updateExtCurrents() {
+  MANTRAS.forEach(m => {
+    const el = document.getElementById('ext-cur-' + m.id);
+    if (el) el.textContent = 'total: ' + state.counts[m.id];
+  });
+}
+
+// ── Keyboard ───────────────────────────────────────────────────────────
+function handleKey(e) {
+  if (e.code === 'Space' && e.target.tagName !== 'BUTTON') {
+    e.preventDefault();
+    increment();
+  }
+  if (e.code === 'Tab') {
+    e.preventDefault();
+    selectMantra((state.activeIdx + 1) % MANTRAS.length);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
